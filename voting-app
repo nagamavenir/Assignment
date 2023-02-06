@@ -1,0 +1,223 @@
+[root@ip-172-31-10-27 ec2-user]# kubectl delete all --all;
+pod "kubia-manual" deleted
+pod "mysql-1675402929-5bf76d6f87-68nkv" deleted
+pod "nginx-pod1" deleted
+pod "nginx-pod2" deleted
+service "kubernetes" deleted
+service "mysql-1675402929" deleted
+deployment.apps "mysql-1675402929" deleted
+replicaset.apps "mysql-1675402929-5bf76d6f87" deleted
+[root@ip-172-31-10-27 ec2-user]# cd $home
+[root@ip-172-31-10-27 ~]# yum install git -y
+Loaded plugins: extras_suggestions, langpacks, priorities, update-motd
+amzn2-core                                                                                                                            | 3.7 kB  00:00:00
+amzn2extra-docker                                                                                                                     | 3.0 kB  00:00:00
+amzn2extra-kernel-5.10                                                                                                                | 3.0 kB  00:00:00
+kubernetes                                                                                                                            | 1.4 kB  00:00:00
+11 packages excluded due to repository priority protections
+Package git-2.39.1-1.amzn2.0.1.x86_64 already installed and latest version
+Nothing to do
+[root@ip-172-31-10-27 ~]# git clone  https://github.com/ashishrpandey/example-voting-app
+Cloning into 'example-voting-app'...
+remote: Enumerating objects: 494, done.
+remote: Total 494 (delta 0), reused 0 (delta 0), pack-reused 494
+Receiving objects: 100% (494/494), 236.18 KiB | 12.43 MiB/s, done.
+Resolving deltas: 100% (179/179), done.
+[root@ip-172-31-10-27 ~]# cd /root/example-voting-app
+[root@ip-172-31-10-27 example-voting-app]# cd
+[root@ip-172-31-10-27 ~]#
+[root@ip-172-31-10-27 ~]# cd/root/example-voting-app/k8s-specifications
+bash: cd/root/example-voting-app/k8s-specifications: No such file or directory
+[root@ip-172-31-10-27 ~]# cd /root/example-voting-app/k8s-specifications
+[root@ip-172-31-10-27 k8s-specifications]# kubectl get pods
+No resources found in default namespace.
+[root@ip-172-31-10-27 k8s-specifications]# ls -ltr
+total 36
+-rw-r--r-- 1 root root 292 Feb  6 17:49 worker-deployment.yaml
+-rw-r--r-- 1 root root 192 Feb  6 17:49 vote-service.yaml
+-rw-r--r-- 1 root root 289 Feb  6 17:49 vote-deployment.yaml
+-rw-r--r-- 1 root root 195 Feb  6 17:49 result-service.yaml
+-rw-r--r-- 1 root root 299 Feb  6 17:49 result-deployment.yaml
+-rw-r--r-- 1 root root 152 Feb  6 17:49 redis-service.yaml
+-rw-r--r-- 1 root root 402 Feb  6 17:49 redis-deployment.yaml
+-rw-r--r-- 1 root root 146 Feb  6 17:49 db-service.yaml
+-rw-r--r-- 1 root root 401 Feb  6 17:49 db-deployment.yaml
+[root@ip-172-31-10-27 k8s-specifications]# cd
+[root@ip-172-31-10-27 ~]# cd /root/example-voting-app/vote
+[root@ip-172-31-10-27 vote]# vi app.py
+[root@ip-172-31-10-27 vote]# cd  /root/example-voting-app/result
+[root@ip-172-31-10-27 result]# vi server.js
+[root@ip-172-31-10-27 result]# ls -ltr
+total 16
+drwxr-xr-x 3 root root   77 Feb  6 17:49 views
+drwxr-xr-x 2 root root   57 Feb  6 17:49 tests
+-rw-r--r-- 1 root root 2239 Feb  6 17:49 server.js
+-rw-r--r-- 1 root root  417 Feb  6 17:49 package.json
+-rw-r--r-- 1 root root  334 Feb  6 17:49 Dockerfile
+-rw-r--r-- 1 root root  787 Feb  6 17:49 docker-compose.test.yml
+[root@ip-172-31-10-27 result]#  cd  /root/example-voting-app/k8s-specifications
+[root@ip-172-31-10-27 k8s-specifications]# ls -ltr
+total 36
+-rw-r--r-- 1 root root 292 Feb  6 17:49 worker-deployment.yaml
+-rw-r--r-- 1 root root 192 Feb  6 17:49 vote-service.yaml
+-rw-r--r-- 1 root root 289 Feb  6 17:49 vote-deployment.yaml
+-rw-r--r-- 1 root root 195 Feb  6 17:49 result-service.yaml
+-rw-r--r-- 1 root root 299 Feb  6 17:49 result-deployment.yaml
+-rw-r--r-- 1 root root 152 Feb  6 17:49 redis-service.yaml
+-rw-r--r-- 1 root root 402 Feb  6 17:49 redis-deployment.yaml
+-rw-r--r-- 1 root root 146 Feb  6 17:49 db-service.yaml
+-rw-r--r-- 1 root root 401 Feb  6 17:49 db-deployment.yaml
+[root@ip-172-31-10-27 k8s-specifications]# vi result-service.yaml
+[root@ip-172-31-10-27 k8s-specifications]# vi result-service.yaml
+[root@ip-172-31-10-27 k8s-specifications]# vi vote-service.yaml
+[root@ip-172-31-10-27 k8s-specifications]# kubectl apply -f .
+deployment.apps/db created
+service/db created
+deployment.apps/redis created
+service/redis created
+deployment.apps/result created
+service/result created
+deployment.apps/vote created
+service/vote created
+deployment.apps/worker created
+[root@ip-172-31-10-27 k8s-specifications]#  kubectl get all
+NAME                          READY   STATUS              RESTARTS   AGE
+pod/db-b54cd94f4-ssbfp        0/1     ContainerCreating   0          10s
+pod/redis-868d64d78-tgcxm     0/1     ContainerCreating   0          9s
+pod/result-5d57b59f4b-9k97b   0/1     ContainerCreating   0          9s
+pod/vote-94849dc97-6ktvh      0/1     ContainerCreating   0          9s
+pod/worker-dd46d7584-tvrvv    0/1     ContainerCreating   0          9s
+
+NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/db           ClusterIP   10.103.194.116   <none>        5432/TCP         9s
+service/kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP          5m49s
+service/redis        ClusterIP   10.110.195.252   <none>        6379/TCP         9s
+service/result       NodePort    10.96.112.175    <none>        5001:31003/TCP   9s
+service/vote         NodePort    10.105.203.233   <none>        5000:31002/TCP   9s
+
+NAME                     READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/db       0/1     1            0           10s
+deployment.apps/redis    0/1     1            0           9s
+deployment.apps/result   0/1     1            0           9s
+deployment.apps/vote     0/1     1            0           9s
+deployment.apps/worker   0/1     1            0           9s
+
+NAME                                DESIRED   CURRENT   READY   AGE
+replicaset.apps/db-b54cd94f4        1         1         0       10s
+replicaset.apps/redis-868d64d78     1         1         0       9s
+replicaset.apps/result-5d57b59f4b   1         1         0       9s
+replicaset.apps/vote-94849dc97      1         1         0       9s
+replicaset.apps/worker-dd46d7584    1         1         0       9s
+[root@ip-172-31-10-27 k8s-specifications]#  kubectl get all
+NAME                          READY   STATUS              RESTARTS   AGE
+pod/db-b54cd94f4-ssbfp        1/1     Running             0          19s
+pod/redis-868d64d78-tgcxm     0/1     ContainerCreating   0          18s
+pod/result-5d57b59f4b-9k97b   0/1     ContainerCreating   0          18s
+pod/vote-94849dc97-6ktvh      0/1     ContainerCreating   0          18s
+pod/worker-dd46d7584-tvrvv    0/1     ContainerCreating   0          18s
+
+NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/db           ClusterIP   10.103.194.116   <none>        5432/TCP         18s
+service/kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP          5m58s
+service/redis        ClusterIP   10.110.195.252   <none>        6379/TCP         18s
+service/result       NodePort    10.96.112.175    <none>        5001:31003/TCP   18s
+service/vote         NodePort    10.105.203.233   <none>        5000:31002/TCP   18s
+
+NAME                     READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/db       1/1     1            1           19s
+deployment.apps/redis    0/1     1            0           18s
+deployment.apps/result   0/1     1            0           18s
+deployment.apps/vote     0/1     1            0           18s
+deployment.apps/worker   0/1     1            0           18s
+
+NAME                                DESIRED   CURRENT   READY   AGE
+replicaset.apps/db-b54cd94f4        1         1         1       19s
+replicaset.apps/redis-868d64d78     1         1         0       18s
+replicaset.apps/result-5d57b59f4b   1         1         0       18s
+replicaset.apps/vote-94849dc97      1         1         0       18s
+replicaset.apps/worker-dd46d7584    1         1         0       18s
+[root@ip-172-31-10-27 k8s-specifications]#  kubectl get all
+NAME                          READY   STATUS              RESTARTS   AGE
+pod/db-b54cd94f4-ssbfp        1/1     Running             0          22s
+pod/redis-868d64d78-tgcxm     1/1     Running             0          21s
+pod/result-5d57b59f4b-9k97b   0/1     ContainerCreating   0          21s
+pod/vote-94849dc97-6ktvh      0/1     ContainerCreating   0          21s
+pod/worker-dd46d7584-tvrvv    0/1     ContainerCreating   0          21s
+
+NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/db           ClusterIP   10.103.194.116   <none>        5432/TCP         21s
+service/kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP          6m1s
+service/redis        ClusterIP   10.110.195.252   <none>        6379/TCP         21s
+service/result       NodePort    10.96.112.175    <none>        5001:31003/TCP   21s
+service/vote         NodePort    10.105.203.233   <none>        5000:31002/TCP   21s
+
+NAME                     READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/db       1/1     1            1           22s
+deployment.apps/redis    1/1     1            1           21s
+deployment.apps/result   0/1     1            0           21s
+deployment.apps/vote     0/1     1            0           21s
+deployment.apps/worker   0/1     1            0           21s
+
+NAME                                DESIRED   CURRENT   READY   AGE
+replicaset.apps/db-b54cd94f4        1         1         1       22s
+replicaset.apps/redis-868d64d78     1         1         1       21s
+replicaset.apps/result-5d57b59f4b   1         1         0       21s
+replicaset.apps/vote-94849dc97      1         1         0       21s
+replicaset.apps/worker-dd46d7584    1         1         0       21s
+[root@ip-172-31-10-27 k8s-specifications]#  kubectl get all
+NAME                          READY   STATUS    RESTARTS   AGE
+pod/db-b54cd94f4-ssbfp        1/1     Running   0          78s
+pod/redis-868d64d78-tgcxm     1/1     Running   0          77s
+pod/result-5d57b59f4b-9k97b   1/1     Running   0          77s
+pod/vote-94849dc97-6ktvh      1/1     Running   0          77s
+pod/worker-dd46d7584-tvrvv    1/1     Running   0          77s
+
+NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/db           ClusterIP   10.103.194.116   <none>        5432/TCP         77s
+service/kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP          6m57s
+service/redis        ClusterIP   10.110.195.252   <none>        6379/TCP         77s
+service/result       NodePort    10.96.112.175    <none>        5001:31003/TCP   77s
+service/vote         NodePort    10.105.203.233   <none>        5000:31002/TCP   77s
+
+NAME                     READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/db       1/1     1            1           78s
+deployment.apps/redis    1/1     1            1           77s
+deployment.apps/result   1/1     1            1           77s
+deployment.apps/vote     1/1     1            1           77s
+deployment.apps/worker   1/1     1            1           77s
+
+NAME                                DESIRED   CURRENT   READY   AGE
+replicaset.apps/db-b54cd94f4        1         1         1       78s
+replicaset.apps/redis-868d64d78     1         1         1       77s
+replicaset.apps/result-5d57b59f4b   1         1         1       77s
+replicaset.apps/vote-94849dc97      1         1         1       77s
+replicaset.apps/worker-dd46d7584    1         1         1       77s
+
+
+
+[root@ip-172-31-10-27 ec2-user]# kubectl logs vote-94849dc97-6ktvh
+[2023-02-06 17:55:23 +0000] [1] [INFO] Starting gunicorn 20.1.0
+[2023-02-06 17:55:23 +0000] [1] [INFO] Listening at: http://0.0.0.0:80 (1)
+[2023-02-06 17:55:23 +0000] [1] [INFO] Using worker: sync
+[2023-02-06 17:55:23 +0000] [6] [INFO] Booting worker with pid: 6
+[2023-02-06 17:55:23 +0000] [7] [INFO] Booting worker with pid: 7
+[2023-02-06 17:55:23 +0000] [8] [INFO] Booting worker with pid: 8
+[2023-02-06 17:55:23 +0000] [9] [INFO] Booting worker with pid: 9
+[root@ip-172-31-10-27 ec2-user]# kubectl logs worker-dd46d7584-tvrvv
+Connected to db
+Found redis at 10.110.195.252
+Connecting to redis
+[root@ip-172-31-10-27 ec2-user]# kubectl logs result-5d57b59f4b-9k97b
+Mon, 06 Feb 2023 17:55:15 GMT body-parser deprecated bodyParser: use individual json/urlencoded middlewares at server.js:73:9
+Mon, 06 Feb 2023 17:55:15 GMT body-parser deprecated undefined extended: provide extended option at ../node_modules/body-parser/index.js:104:29
+App running on port 80
+Connected to db
+Error performing query: error: relation "votes" does not exist
+Error performing query: error: relation "votes" does not exist
+Error performing query: error: relation "votes" does not exist
+Error performing query: error: relation "votes" does not exist
+Error performing query: error: relation "votes" does not exist
+Error performing query: error: relation "votes" does not exist
+Error performing query: error: relation "votes" does not exist
+
+
